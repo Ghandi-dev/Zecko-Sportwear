@@ -1,0 +1,40 @@
+.card-caption p{
+    width: 50%;
+}
+@media only screen and (max-width: 766px) {
+    h1,h4{
+        font-size: large;
+    }
+    .lead{
+        font-size: small;
+    }
+    .display-1{
+        font-size: larger;
+    }
+    .card-caption > * {
+        margin-top: 20px; /* Atur nilai padding sesuai kebutuhan */
+      }
+    
+}
+@media screen and (max-width:500px){
+    .card-caption{
+        width: 100%;
+        margin-top: 190px;
+        display: grid;
+        place-items: center;
+    }
+    .card-caption > * {
+        margin-top: 20px; /* Atur nilai padding sesuai kebutuhan */
+      }
+
+}
+@media screen and (max-width:1500px){
+    /* Navbar.jsx */
+    .brand-logo{
+        margin-left: 20px;
+    }
+    .card-text{
+        display: none;
+    }
+    
+}
