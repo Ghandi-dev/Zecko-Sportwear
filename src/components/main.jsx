@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 const Home = () => {
   return (
@@ -17,7 +18,12 @@ const Home = () => {
             />
           </picture>
           <div className="card-img-overlay d-flex align-items-center">
-            <div className="card-caption">
+            <motion.div
+              className="card-caption"
+              initial={{ x: -1000 }}
+              animate={{ x: 0 }}
+              transition={{ delay: 0.2, duration: 1 }}
+            >
               <h1 className="card-title text fw-2 text-dark my-0">
                 Selamat Datang Di Halaman
               </h1>
@@ -31,8 +37,17 @@ const Home = () => {
                 juga merangkul keunikan dan semangat dari setiap atlet, tim,
                 atau komunitas.
               </p>
-              <button className="btn btn-warning">Pesan Custom Sekarang</button>
-            </div>
+              <motion.button
+                whileTap={{ rotate: "2.5deg" }}
+                whileHover={{
+                  scale: 1.2,
+                }}
+                transition={{ duration: 0.1 }}
+                className="btn btn-warning"
+              >
+                Pesan Custom Sekarang
+              </motion.button>
+            </motion.div>
           </div>
         </div>
       </div>
@@ -42,12 +57,19 @@ const Home = () => {
         <div className="shadow p-3 mb-5 bg-white rounded">
           <div className="row">
             <div className="col-lg-4 d-flex justify-content-center">
-              <img
+              <motion.img
                 className="rounded"
                 src="./assets/img/promo.jpg"
                 alt="Card"
                 height={250}
                 width={250}
+                initial={{ scale: 0.5 }}
+                whileInView={{
+                  boxShadow: "10px 10px 0 rgba(0, 0, 0, 0.2)",
+                  scale: 1,
+                }}
+                transition={{ delay: 0.1, duration: 1 }}
+                viewport={{ once: false, amount: 0.8 }}
               />
             </div>
             <div className="col-lg-8">
@@ -63,18 +85,23 @@ const Home = () => {
           </div>
           <div className="row my-4">
             <div className="col-lg-4 d-flex justify-content-center order-lg-2">
-              <img
+              <motion.img
                 className="rounded"
                 src="./assets/img/promo2.jpg"
                 alt="Card"
                 height={250}
                 width={250}
+                initial={{ scale: 0.5 }}
+                whileInView={{
+                  boxShadow: "10px 10px 0 rgba(0, 0, 0, 0.2)",
+                  scale: 1,
+                }}
+                transition={{ delay: 0.1, duration: 1 }}
+                viewport={{ once: false, amount: 0.8 }}
               />
             </div>
             <div className="col-lg-8 order-lg-1">
-              <h4 className="text-center py-4">
-                Desain Kustom yang Menginspirasi
-              </h4>
+              <h4 className="text-center py-4">Desain yang Menginspirasi</h4>
               <p className="lead">
                 Setiap desain Zecko lahir dari imajinasi Anda. Tim desain kami
                 bekerja secara langsung dengan Anda untuk menciptakan busana

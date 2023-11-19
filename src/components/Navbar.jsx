@@ -1,14 +1,20 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { motion } from "framer-motion";
 
 const Navbar = () => {
   const state = useSelector((state) => state.handleCart);
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light py-3 sticky-top">
+    <motion.nav
+      initial={{ y: -1000 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 1 }}
+      className="navbar navbar-expand-lg navbar-light bg-light py-3 sticky-top"
+    >
       <div className="container">
         <a href="/" className="brand-logo">
-          <img height={30} src="./assets/img/logo.png" alt />
+          <img height={30} src="https://i.imgur.com/MV83gXS.png" alt="logo" />
         </a>
         <button
           className="navbar-toggler mx-2"
@@ -52,7 +58,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 };
 
