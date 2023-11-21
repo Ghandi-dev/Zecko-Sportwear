@@ -99,12 +99,13 @@ const Products = () => {
                     <li className="list-group-item">Vestibulum at eros</li> */}
                 </ul>
                 <div className="card-body">
-                  <Link
-                    to={"/product/" + product.id}
+                  <a
+                    href={`https://wa.me/6285927532252?&text=Halo%2C%20saya%20lihat%20Website%20Anda%20dan%20tertarik%20membeli%20produk%20%5B${product.name}%5D.%0ADapatkah%20Anda%20membantu%20saya%3F`}
+                    target="_blank"
                     className="btn btn-dark m-1"
                   >
                     Buy Now
-                  </Link>
+                  </a>
                   <button
                     className="btn btn-dark m-1"
                     onClick={() => addProduct(product)}

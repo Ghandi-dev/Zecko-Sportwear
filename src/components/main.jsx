@@ -37,16 +37,17 @@ const Home = () => {
                 juga merangkul keunikan dan semangat dari setiap atlet, tim,
                 atau komunitas.
               </p>
-              <motion.button
+              <motion.a
                 whileTap={{ rotate: "2.5deg" }}
                 whileHover={{
                   scale: 1.2,
                 }}
                 transition={{ duration: 0.1 }}
                 className="btn btn-warning"
+                href="/order"
               >
                 Pesan Custom Sekarang
-              </motion.button>
+              </motion.a>
             </motion.div>
           </div>
         </div>
