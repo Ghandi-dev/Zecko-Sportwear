@@ -3,6 +3,8 @@ import { Footer, Navbar } from "../components";
 import { motion } from "framer-motion";
 import ModalOrder from "../components/ModalOrder";
 
+const telegramBotToken = process.env.REACT_APP_TOKEN_TELEGRAM;
+const chatId = process.env.REACT_APP_CHAT_ID;
 const Order = () => {
   const defaultImage = null;
   const [showModal, setShowModal] = useState(false);
@@ -37,8 +39,8 @@ const Order = () => {
     const formDataTelegram = new FormData(e.target);
     const image1 = formDataTelegram.get("design");
 
-    const telegramBotToken = process.env.TOKEN_TELEGRAM;
-    const chatId = process.env.CHAT_ID;
+    console.log(telegramBotToken);
+    console.log(chatId);
 
     const message = `Nama: ${formData.name}\nNomor WA: ${formData.noWa}\nPemain :\n${formData.playerList}`;
     const mediaArray = [
