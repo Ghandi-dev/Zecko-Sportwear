@@ -6,15 +6,12 @@ import supabase from "../config/clientSupabase";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-import { Link } from "react-router-dom";
 const CDN_URL =
   "https://lwaeqdokbnvduhnprtic.supabase.co/storage/v1/object/public/images/";
 
 const Products = () => {
   const [data, setData] = useState([]);
-  const [filter, setFilter] = useState(data);
   const [loading, setLoading] = useState(false);
-  // let componentMounted = true;
 
   const dispatch = useDispatch();
 
@@ -33,10 +30,6 @@ const Products = () => {
       } else {
         console.log("error");
       }
-
-      // return () => {
-      //   componentMounted = false;
-      // };
     };
 
     getProducts();
@@ -66,10 +59,6 @@ const Products = () => {
     );
   };
 
-  const filterProduct = (cat) => {
-    const updatedList = data.filter((item) => item.category === cat);
-    setFilter(updatedList);
-  };
   const ShowProducts = () => {
     return (
       <>
@@ -102,6 +91,7 @@ const Products = () => {
                   <a
                     href={`https://wa.me/6285927532252?&text=Halo%2C%20saya%20lihat%20Website%20Anda%20dan%20tertarik%20membeli%20produk%20%5B${product.name}%5D.%0ADapatkah%20Anda%20membantu%20saya%3F`}
                     target="_blank"
+                    rel="noreferrer"
                     className="btn btn-dark m-1"
                   >
                     Buy Now

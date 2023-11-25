@@ -4,16 +4,73 @@ import { motion } from "framer-motion";
 import ModalOrder from "../components/ModalOrder";
 
 const Order = () => {
+  const defaultImage = null;
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState(null);
-  const [patternImage, setPatternImage] = useState(null);
-  const [materialImage, setMaterialImage] = useState(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    noWa: "",
+    design: defaultImage,
+    patternImage: "",
+    materialImage: "",
+    playerList: "",
+  });
+
+  const handleChange = (e) => {
+    if (e.target.name === "design") {
+      const file = e.target.files[0];
+      setFormData({ ...formData, design: file ? file : defaultImage });
+    } else {
+      const { name, value } = e.target;
+      setFormData({ ...formData, [name]: value });
+    }
+  };
 
   const handleImageSelection = (imageUrl, modalType) => {
-    modalType == "Pola"
-      ? setPatternImage(imageUrl)
-      : setMaterialImage(imageUrl);
+    modalType === "Pola"
+      ? setFormData({ ...formData, patternImage: imageUrl })
+      : setFormData({ ...formData, materialImage: imageUrl });
     setShowModal(false);
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formDataTelegram = new FormData(e.target);
+    const image1 = formDataTelegram.get("design");
+
+    const telegramBotToken = process.env.TOKEN_TELEGRAM;
+    const chatId = process.env.CHAT_ID;
+
+    const message = `Nama: ${formData.name}\nNomor WA: ${formData.noWa}\nPemain :\n${formData.playerList}`;
+    const mediaArray = [
+      {
+        type: "photo",
+        media: `attach://${image1.name}`,
+        caption: message,
+      },
+      {
+        type: "photo",
+        media: `${formData.materialImage}`,
+      },
+      {
+        type: "photo",
+        media: `${formData.patternImage}`,
+      },
+    ];
+    formDataTelegram.set("chat_id", chatId);
+    formDataTelegram.set("caption", message); // Menggunakan 'caption' untuk teks
+    formDataTelegram.set("media", JSON.stringify(mediaArray));
+    formDataTelegram.set(image1.name, image1);
+    try {
+      await fetch(
+        `https://api.telegram.org/bot${telegramBotToken}/sendMediaGroup`,
+        {
+          method: "POST",
+          body: formDataTelegram,
+        }
+      );
+    } catch (error) {
+      console.error("Error sending message via Telegram:", error);
+    }
   };
   return (
     <>
@@ -24,21 +81,48 @@ const Order = () => {
         </div>
         <div className="row justify-content-center">
           <div className="col-lg-4 col-md-6 shadow p-3 mb-5 bg-white rounded ">
-            <form className="lead">
-              <div class="form-group">
-                <label for="nama">Nama</label>
-                <input type="text" class="form-control" />
+            <form className="lead" onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label>Nama</label>
+                <input
+                  name="name"
+                  type="text"
+                  className="form-control"
+                  value={formData.name}
+                  onChange={handleChange}
+                />
               </div>
-              <div class="form-group">
-                <label for="noWa">Nomor WhatsApp</label>
-                <input type="text" class="form-control" />
+              <div className="form-group">
+                <label>Nomor WhatsApp</label>
+                <input
+                  name="noWa"
+                  type="text"
+                  className="form-control"
+                  required
+                  value={formData.noWa}
+                  onChange={handleChange}
+                />
               </div>
-              <div class="form-group">
-                <label for="Pola">Pola</label>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
+              <div className="form-group">
+                <label>Desain</label>
+                <div className="input-group mb-3 custom">
+                  <label className="input-group-text lead">Upload</label>
+                  <input
+                    type="file"
+                    name="design"
+                    accept="image/*"
+                    className="form-control"
+                    required
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Pola</label>
+                <div className="input-group mb-3">
+                  <div className="input-group-prepend">
                     <button
-                      class="btn btn-outline-secondary lead"
+                      className="btn btn-outline-secondary lead"
                       type="button"
                       onClick={() => {
                         setShowModal(true);
@@ -50,18 +134,19 @@ const Order = () => {
                   </div>
                   <input
                     type="text"
-                    class="form-control"
-                    value={patternImage}
+                    name="pola"
+                    className="form-control"
+                    value={formData.patternImage}
                     disabled
                   />
                 </div>
               </div>
-              <div class="form-group">
-                <label for="Pola">Material</label>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
+              <div className="form-group">
+                <label>Jenis Bahan</label>
+                <div className="input-group mb-3">
+                  <div className="input-group-prepend">
                     <button
-                      class="btn btn-outline-secondary lead"
+                      className="btn btn-outline-secondary lead"
                       type="button"
                       onClick={() => {
                         setShowModal(true);
@@ -73,15 +158,26 @@ const Order = () => {
                   </div>
                   <input
                     type="text"
-                    class="form-control"
-                    value={materialImage}
+                    name="material"
+                    className="form-control"
+                    value={formData.materialImage}
                     disabled
                   />
                 </div>
               </div>
-              <div class="form-group">
-                <label for="jumlah">Jumlah</label>
-                <input type="text" class="form-control" />
+              <div className="form-group">
+                <label>Nama Pemain - No Punggung - Ukuran</label>
+                <textarea
+                  name="playerList"
+                  className="form-control"
+                  rows={7}
+                  aria-label="With textarea"
+                  placeholder="Contoh :
+                  1. Zecko - 10 - XL
+                  2. Dst.."
+                  required
+                  onChange={handleChange}
+                ></textarea>
               </div>
               <motion.button
                 whileTap={{ rotate: "2.5deg" }}
@@ -90,7 +186,11 @@ const Order = () => {
                 }}
                 transition={{ duration: 0.1 }}
                 type="submit"
-                class="btn btn-warning float-right"
+                className="btn btn-warning float-right"
+                disabled={
+                  formData.materialImage === null ||
+                  formData.patternImage === null
+                }
               >
                 Kirim
               </motion.button>
