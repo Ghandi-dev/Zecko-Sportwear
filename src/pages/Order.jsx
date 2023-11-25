@@ -216,7 +216,7 @@ const Order = () => {
                 ></textarea>
               </div>
               <motion.button
-                style={{ width: "10vh" }}
+                style={{ width: "20vw" }}
                 whileTap={{ rotate: "2.5deg" }}
                 whileHover={{
                   scale: 1.2,
