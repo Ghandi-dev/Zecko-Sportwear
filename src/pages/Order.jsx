@@ -2,21 +2,23 @@ import React, { useState } from "react";
 import { Footer, Navbar } from "../components";
 import { motion } from "framer-motion";
 import ModalOrder from "../components/ModalOrder";
+import Swal from "sweetalert2";
 
 const telegramBotToken = process.env.REACT_APP_TOKEN_TELEGRAM;
 const chatId = process.env.REACT_APP_CHAT_ID;
 const Order = () => {
   const defaultImage = null;
-  const [showModal, setShowModal] = useState(false);
-  const [modalType, setModalType] = useState(null);
-  const [formData, setFormData] = useState({
-    name: "",
+  const defaultFormData = {
+    nama: "",
     noWa: "",
     design: defaultImage,
     patternImage: "",
     materialImage: "",
     playerList: "",
-  });
+  };
+  const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState(null);
+  const [formData, setFormData] = useState(defaultFormData);
 
   const handleChange = (e) => {
     if (e.target.name === "design") {
@@ -29,9 +31,11 @@ const Order = () => {
   };
 
   const handleImageSelection = (imageUrl, modalType) => {
-    modalType === "Pola"
-      ? setFormData({ ...formData, patternImage: imageUrl })
-      : setFormData({ ...formData, materialImage: imageUrl });
+    if (modalType === "Pola" || modalType === "Material") {
+      modalType === "Pola"
+        ? setFormData({ ...formData, patternImage: imageUrl })
+        : setFormData({ ...formData, materialImage: imageUrl });
+    }
     setShowModal(false);
   };
   const handleSubmit = async (e) => {
@@ -39,10 +43,7 @@ const Order = () => {
     const formDataTelegram = new FormData(e.target);
     const image1 = formDataTelegram.get("design");
 
-    console.log(telegramBotToken);
-    console.log(chatId);
-
-    const message = `Nama: ${formData.name}\nNomor WA: ${formData.noWa}\nPemain :\n${formData.playerList}`;
+    const message = `Nama: ${formData.nama}\nNomor WA: ${formData.noWa}\nPemain :\n${formData.playerList}`;
     const mediaArray = [
       {
         type: "photo",
@@ -63,13 +64,31 @@ const Order = () => {
     formDataTelegram.set("media", JSON.stringify(mediaArray));
     formDataTelegram.set(image1.name, image1);
     try {
-      await fetch(
+      const response = await fetch(
         `https://api.telegram.org/bot${telegramBotToken}/sendMediaGroup`,
         {
           method: "POST",
           body: formDataTelegram,
         }
       );
+      if (response.ok === true) {
+        Swal.fire({
+          icon: "success",
+          title: "Pemesanan anda telah berhasil",
+          text: "Admin kami segera menghubungi anda",
+          confirmButtonText: "OK",
+        });
+        setFormData(defaultFormData);
+        e.target.reset();
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Terjadi Masalah",
+          text: "Pesanan anda tidak dapat diproses",
+          footer:
+            '<a href="https://wa.me/6285927532252?&text=Halo%2C%20Website%20anda%20bermasalah%20bisakah%20anda%20membantu%20saya%20%3F">Chat admin kami</a>',
+        });
+      }
     } catch (error) {
       console.error("Error sending message via Telegram:", error);
     }
@@ -87,10 +106,10 @@ const Order = () => {
               <div className="form-group">
                 <label>Nama</label>
                 <input
-                  name="name"
+                  name="nama"
                   type="text"
                   className="form-control"
-                  value={formData.name}
+                  value={formData.nama}
                   onChange={handleChange}
                 />
               </div>
@@ -167,16 +186,29 @@ const Order = () => {
                 </div>
               </div>
               <div className="form-group">
-                <label>Nama Pemain - No Punggung - Ukuran</label>
+                <div className="row">
+                  <div className="col-8">
+                    <label>Nama Pemain - No Punggung - Ukuran</label>
+                  </div>
+                  <div className="col-4 text-right">
+                    <label>info ukuran&ensp;</label>
+                    <i
+                      className="fa-solid fa-circle-info"
+                      onClick={() => {
+                        setShowModal(true);
+                        setModalType("Info");
+                      }}
+                    ></i>
+                  </div>
+                </div>
                 <textarea
                   name="playerList"
-                  className="form-control"
+                  className="form-control lead"
                   rows={7}
                   aria-label="With textarea"
-                  placeholder="Contoh :
-                  1. Zecko - 10 - XL
-                  2. Dst.."
+                  placeholder="Contoh :&#10;1. Zecko - 10 - XL&#10;2. Dst..&#10;-&#10;Informasi ukuran bisa klik tanda seru di pojok kanan"
                   required
+                  value={formData.playerList}
                   onChange={handleChange}
                 ></textarea>
               </div>

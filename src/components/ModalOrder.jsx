@@ -17,6 +17,7 @@ const ModalOrder = ({ show, handleClose, handleImageSelection, modalType }) => {
   const images = [
     "https://i.imgur.com/SaIC9la.jpg",
     "https://i.imgur.com/pv2SBFA.jpg",
+    "https://i.imgur.com/z2Duai6.jpg",
     // Tambahkan URL gambar lainnya
   ];
 
@@ -25,13 +26,14 @@ const ModalOrder = ({ show, handleClose, handleImageSelection, modalType }) => {
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>
-            {modalType == "Pola" ? "Pilih Pola" : "Pilih  Material"}
+            {modalType != "Info" ? `Pilih ${modalType}` : "Info Size"}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            geser ke kiri untuk {modalType == "Pola" ? "pola" : "material"}{" "}
-            lainnya
+            {modalType != "Info"
+              ? `geser ke kiri untuk ${modalType} lainnya`
+              : ""}
           </p>
           <Swiper
             effect={"cards"}
