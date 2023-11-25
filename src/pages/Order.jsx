@@ -106,7 +106,6 @@ const Order = () => {
               <div className="form-group">
                 <label>Desain</label>
                 <div className="input-group mb-3 custom">
-                  <label className="input-group-text lead">Upload</label>
                   <input
                     type="file"
                     name="design"
