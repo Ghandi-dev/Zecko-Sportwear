@@ -26,12 +26,12 @@ const ModalOrder = ({ show, handleClose, handleImageSelection, modalType }) => {
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>
-            {modalType != "Info" ? `Pilih ${modalType}` : "Info Size"}
+            {modalType !== "Info" ? `Pilih ${modalType}` : "Info Ukuran"}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            {modalType != "Info"
+            {modalType !== "Info"
               ? `geser ke kiri untuk ${modalType} lainnya`
               : ""}
           </p>

@@ -170,6 +170,14 @@ const Home = () => {
           </div>
         </div>
       </div>
+      <a
+        href="https://wa.me/6285927532252?&text=Halo%20admin"
+        className="float"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <i className="fa fa-whatsapp my-float"></i>
+      </a>
     </>
   );
 };

@@ -3,6 +3,7 @@ import { Footer, Navbar } from "../components";
 import { motion } from "framer-motion";
 import ModalOrder from "../components/ModalOrder";
 import Swal from "sweetalert2";
+import Spinner from "react-bootstrap/Spinner";
 
 const telegramBotToken = process.env.REACT_APP_TOKEN_TELEGRAM;
 const chatId = process.env.REACT_APP_CHAT_ID;
@@ -19,6 +20,7 @@ const Order = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState(null);
   const [formData, setFormData] = useState(defaultFormData);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     if (e.target.name === "design") {
@@ -64,6 +66,7 @@ const Order = () => {
     formDataTelegram.set("media", JSON.stringify(mediaArray));
     formDataTelegram.set(image1.name, image1);
     try {
+      setIsLoading(true);
       const response = await fetch(
         `https://api.telegram.org/bot${telegramBotToken}/sendMediaGroup`,
         {
@@ -79,18 +82,18 @@ const Order = () => {
           confirmButtonText: "OK",
         });
         setFormData(defaultFormData);
+        setIsLoading(false);
         e.target.reset();
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Terjadi Masalah",
-          text: "Pesanan anda tidak dapat diproses",
-          footer:
-            '<a href="https://wa.me/6285927532252?&text=Halo%2C%20Website%20anda%20bermasalah%20bisakah%20anda%20membantu%20saya%20%3F">Chat admin kami</a>',
-        });
       }
     } catch (error) {
       console.error("Error sending message via Telegram:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Terjadi Masalah",
+        text: "Pesanan anda tidak dapat diproses",
+        footer:
+          '<a href="https://wa.me/6285927532252?&text=Halo%2C%20Website%20anda%20bermasalah%20bisakah%20anda%20membantu%20saya%20%3F">Chat admin kami</a>',
+      });
     }
   };
   return (
@@ -188,7 +191,7 @@ const Order = () => {
               <div className="form-group">
                 <div className="row">
                   <div className="col-8">
-                    <label>Nama Pemain - No Punggung - Ukuran</label>
+                    <label>Daftar Pemain</label>
                   </div>
                   <div className="col-4 text-right">
                     <label>info ukuran&ensp;</label>
@@ -206,13 +209,14 @@ const Order = () => {
                   className="form-control lead"
                   rows={7}
                   aria-label="With textarea"
-                  placeholder="Contoh :&#10;1. Zecko - 10 - XL&#10;2. Dst..&#10;-&#10;Informasi ukuran bisa klik tanda seru di pojok kanan"
+                  placeholder="Nama - No Punggung - Ukuran&#10;-&#10;Contoh :&#10;1. Zecko - 10 - XL&#10;2. Dst..&#10;-&#10;Informasi ukuran bisa klik tanda seru di pojok kanan"
                   required
                   value={formData.playerList}
                   onChange={handleChange}
                 ></textarea>
               </div>
               <motion.button
+                style={{ width: "10vh" }}
                 whileTap={{ rotate: "2.5deg" }}
                 whileHover={{
                   scale: 1.2,
@@ -225,7 +229,7 @@ const Order = () => {
                   formData.patternImage === null
                 }
               >
-                Kirim
+                {isLoading ? <Spinner animation="border" size="sm" /> : "Kirim"}
               </motion.button>
             </form>
           </div>
