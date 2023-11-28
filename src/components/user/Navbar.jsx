@@ -1,52 +1,40 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 
-const Navbar = () => {
+const Navbar = ({ handleButtonClick }) => {
   return (
     <motion.nav
       initial={{ y: -1000 }}
       animate={{ y: 0 }}
       transition={{ duration: 1 }}
-      className="navbar navbar-expand-lg navbar-light bg-light py-3 sticky-top"
+      className="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl position-sticky"
+      id="navbarBlur"
+      navbar-scroll="true"
     >
-      <div className="container">
-        <a href="/" className="brand-logo">
+      <div className="container-fluid py-1 ">
+        <a href="/" className="brand-logo mx-0">
           <img height={30} src="https://i.imgur.com/MV83gXS.png" alt="logo" />
         </a>
-        <button
-          className="navbar-toggler mx-2"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
+        <div
+          className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4"
+          id="navbar"
         >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav m-auto my-2 text-center">
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/">
-                Home{" "}
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/product">
-                Products
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/about">
-                About
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/contact">
-                Contact
-              </NavLink>
+          <div className="ms-md-auto pe-md-3 d-flex align-items-center"></div>
+          <ul className="navbar-nav  justify-content-end">
+            <li className="nav-item d-xl-none ps-3 d-flex align-items-center">
+              {/* eslint-disable-next-line */}
+              <a
+                href={undefined}
+                className="nav-link text-body p-0"
+                id="iconNavbarSidenav"
+                onClick={handleButtonClick}
+              >
+                <div className="sidenav-toggler-inner">
+                  <i className="sidenav-toggler-line" />
+                  <i className="sidenav-toggler-line" />
+                  <i className="sidenav-toggler-line" />
+                </div>
+              </a>
             </li>
           </ul>
         </div>

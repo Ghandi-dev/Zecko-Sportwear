@@ -21609,7 +21609,7 @@ hr.horizontal.gray-light {
 }
 
 .navbar-vertical.bg-white .navbar-nav .nav-link .icon {
-  background-image: linear-gradient(310deg, #e9ecef 0%, #e9ecef 100%);
+  background-image: linear-gradient(310deg, #344767 0%, #344767 100%);
 }
 
 .navbar-vertical .navbar-nav .nav-link.active {
@@ -21624,7 +21624,10 @@ hr.horizontal.gray-light {
 }
 
 .navbar-vertical .navbar-nav>.nav-item .nav-link.active .icon {
-  background-image: linear-gradient(310deg, #cb0c9f 0%, #cb0c9f 100%);
+  background-image: linear-gradient(310deg, #fbcf33 0%, #fbcf33 100%);
+}
+.navbar-vertical .navbar-nav>.nav-item .nav-link.active2 .icon {
+  background-image: linear-gradient(310deg, #344767 0%, #344767 100%);
 }
 
 .navbar-vertical .navbar-nav>.nav-item .nav-link.active .icon svg .color-background,

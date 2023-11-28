@@ -10,10 +10,8 @@ import supabase from "./config/clientSupabase";
 
 import {
   Home,
-  Product,
   Products,
   AboutPage,
-  ContactPage,
   Cart,
   Login,
   Register,
@@ -21,7 +19,7 @@ import {
   PageNotFound,
 } from "./pages/user";
 
-import { Dashboard, ProductAdmin } from "./pages/admin";
+import { Dashboard, ProductAdmin, Bahan, Pola } from "./pages/admin";
 
 const App = () => {
   const [session, setSession] = useState({});
@@ -53,18 +51,16 @@ const App = () => {
           />
           <Route
             path="/admin/bahan"
-            element={session.session !== null ? <ProductAdmin /> : <Login />}
+            element={session.session !== null ? <Bahan /> : <Login />}
           />
           <Route
             path="/admin/pola"
-            element={session.session !== null ? <ProductAdmin /> : <Login />}
+            element={session.session !== null ? <Pola /> : <Login />}
           />
           {/* user */}
           <Route path="/product" element={<Products />} />
           <Route path="/order" element={<Order />} />
-          <Route path="/product/:id" element={<Product />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

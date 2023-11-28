@@ -20,7 +20,7 @@ const Home = () => {
           <div className="card-img-overlay d-flex align-items-center">
             <motion.div
               className="card-caption"
-              initial={{ x: -1000 }}
+              initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               transition={{ delay: 0.2, duration: 1 }}
             >

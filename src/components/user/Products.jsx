@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import supabase from "../../config/clientSupabase";
+import { FormatRupiah } from "@arismun/format-rupiah";
 
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-const CDN_URL =
-  "https://lwaeqdokbnvduhnprtic.supabase.co/storage/v1/object/public/images/";
+const CDN_URL = process.env.REACT_APP_CDN_URL;
 
 const Products = () => {
   const [data, setData] = useState([]);
@@ -74,7 +74,9 @@ const Products = () => {
                   </p>
                 </div>
                 <ul className="list-group list-group-flush">
-                  <li className="list-group-item lead">Rp. {product.price}</li>
+                  <li className="list-group-item lead">
+                    <FormatRupiah value={product.price} />
+                  </li>
                 </ul>
                 <div className="card-body">
                   <a

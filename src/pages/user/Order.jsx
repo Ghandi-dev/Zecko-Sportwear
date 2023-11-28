@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Footer, Navbar } from "../../components/user";
+import { Footer, Navbar, Sidebar } from "../../components/user";
 import { motion } from "framer-motion";
 import ModalOrder from "../../components/user/ModalOrder";
 import Swal from "sweetalert2";
@@ -7,6 +7,7 @@ import Spinner from "react-bootstrap/Spinner";
 
 const telegramBotToken = process.env.REACT_APP_TOKEN_TELEGRAM;
 const chatId = process.env.REACT_APP_CHAT_ID;
+
 const Order = () => {
   const defaultImage = null;
   const defaultFormData = {
@@ -21,6 +22,18 @@ const Order = () => {
   const [modalType, setModalType] = useState(null);
   const [formData, setFormData] = useState(defaultFormData);
   const [isLoading, setIsLoading] = useState(false);
+  const [asideIsActive, setAsideIsActive] = useState(false);
+
+  const handleButtonClick = () => {
+    // Menambah kelas pada elemen <body>
+    !document.body.classList.contains("g-sidenav-pinned")
+      ? document.body.classList.add("g-sidenav-pinned")
+      : document.body.classList.remove("g-sidenav-pinned");
+    // Menambah kelas pada elemen <aside>
+    if (asideIsActive) {
+      setAsideIsActive(false);
+    }
+  };
 
   const handleChange = (e) => {
     if (e.target.name === "design") {
@@ -98,150 +111,157 @@ const Order = () => {
   };
   return (
     <>
-      <Navbar />
-      <div className="container-fluid">
-        <div className="row text-center my-3">
-          <h1> Form Order</h1>
-        </div>
-        <div className="row justify-content-center">
-          <div className="col-lg-4 col-md-6 shadow p-3 mb-5 bg-white rounded ">
-            <form className="lead" onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label>Nama</label>
-                <input
-                  name="nama"
-                  type="text"
-                  className="form-control"
-                  value={formData.nama}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="form-group">
-                <label>Nomor WhatsApp</label>
-                <input
-                  name="noWa"
-                  type="text"
-                  className="form-control"
-                  required
-                  value={formData.noWa}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="form-group">
-                <label>Desain</label>
-                <div className="input-group mb-3 custom">
+      <Sidebar isActive={asideIsActive} />
+      <main className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+        <Navbar handleButtonClick={handleButtonClick} />
+        <div className="container-fluid">
+          <div className="row text-center my-3">
+            <h1> Form Order</h1>
+          </div>
+          <div className="row justify-content-center">
+            <div className="col-lg-4 col-md-6 shadow p-3 mb-5 bg-white rounded ">
+              <form className="lead" onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <label>Nama</label>
                   <input
-                    type="file"
-                    name="design"
-                    accept="image/*"
+                    name="nama"
+                    type="text"
                     className="form-control"
-                    required
+                    value={formData.nama}
                     onChange={handleChange}
                   />
                 </div>
-              </div>
-              <div className="form-group">
-                <label>Pola</label>
-                <div className="input-group mb-3">
-                  <div className="input-group-prepend">
-                    <button
-                      className="btn btn-outline-secondary lead"
-                      type="button"
-                      onClick={() => {
-                        setShowModal(true);
-                        setModalType("Pola");
-                      }}
-                    >
-                      Pilih
-                    </button>
-                  </div>
+                <div className="form-group">
+                  <label>Nomor WhatsApp</label>
                   <input
+                    name="noWa"
                     type="text"
-                    name="pola"
                     className="form-control"
-                    value={formData.patternImage}
-                    disabled
+                    required
+                    value={formData.noWa}
+                    onChange={handleChange}
                   />
                 </div>
-              </div>
-              <div className="form-group">
-                <label>Jenis Bahan</label>
-                <div className="input-group mb-3">
-                  <div className="input-group-prepend">
-                    <button
-                      className="btn btn-outline-secondary lead"
-                      type="button"
-                      onClick={() => {
-                        setShowModal(true);
-                        setModalType("Material");
-                      }}
-                    >
-                      Pilih
-                    </button>
-                  </div>
-                  <input
-                    type="text"
-                    name="material"
-                    className="form-control"
-                    value={formData.materialImage}
-                    disabled
-                  />
-                </div>
-              </div>
-              <div className="form-group">
-                <div className="row">
-                  <div className="col-8">
-                    <label>Daftar Pemain</label>
-                  </div>
-                  <div className="col-4 text-right">
-                    <label>info ukuran&ensp;</label>
-                    <i
-                      className="fa-solid fa-circle-info"
-                      onClick={() => {
-                        setShowModal(true);
-                        setModalType("Info");
-                      }}
-                    ></i>
+                <div className="form-group">
+                  <label>Desain</label>
+                  <div className="input-group mb-3 custom">
+                    <input
+                      type="file"
+                      name="design"
+                      accept="image/*"
+                      className="form-control"
+                      required
+                      onChange={handleChange}
+                    />
                   </div>
                 </div>
-                <textarea
-                  name="playerList"
-                  className="form-control lead"
-                  rows={7}
-                  aria-label="With textarea"
-                  placeholder="Nama - No Punggung - Ukuran&#10;-&#10;Contoh :&#10;1. Zecko - 10 - XL&#10;2. Dst..&#10;-&#10;Informasi ukuran bisa klik tanda seru di pojok kanan"
-                  required
-                  value={formData.playerList}
-                  onChange={handleChange}
-                ></textarea>
-              </div>
-              <motion.button
-                style={{ width: "20vw" }}
-                whileTap={{ rotate: "2.5deg" }}
-                whileHover={{
-                  scale: 1.2,
-                }}
-                transition={{ duration: 0.1 }}
-                type="submit"
-                className="btn btn-warning float-right"
-                disabled={
-                  formData.materialImage === null ||
-                  formData.patternImage === null
-                }
-              >
-                {isLoading ? <Spinner animation="border" size="sm" /> : "Kirim"}
-              </motion.button>
-            </form>
+                <div className="form-group">
+                  <label>Pola</label>
+                  <div className="input-group mb-3">
+                    <div className="input-group-prepend">
+                      <button
+                        className="btn btn-outline-secondary lead mb-0"
+                        type="button"
+                        onClick={() => {
+                          setShowModal(true);
+                          setModalType("Pola");
+                        }}
+                      >
+                        Pilih
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      name="pola"
+                      className="form-control"
+                      value={formData.patternImage}
+                      disabled
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label>Jenis Bahan</label>
+                  <div className="input-group mb-3">
+                    <div className="input-group-prepend">
+                      <button
+                        className="btn btn-outline-secondary lead mb-0"
+                        type="button"
+                        onClick={() => {
+                          setShowModal(true);
+                          setModalType("Material");
+                        }}
+                      >
+                        Pilih
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      name="material"
+                      className="form-control"
+                      value={formData.materialImage}
+                      disabled
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <div className="row">
+                    <div className="col-8">
+                      <label>Daftar Pemain</label>
+                    </div>
+                    <div className="col-4 text-right">
+                      <label>info ukuran&ensp;</label>
+                      <i
+                        className="fa-solid fa-circle-info"
+                        onClick={() => {
+                          setShowModal(true);
+                          setModalType("Info");
+                        }}
+                      ></i>
+                    </div>
+                  </div>
+                  <textarea
+                    name="playerList"
+                    className="form-control lead"
+                    rows={7}
+                    aria-label="With textarea"
+                    placeholder="Nama - No Punggung - Ukuran&#10;-&#10;Contoh :&#10;1. Zecko - 10 - XL&#10;2. Dst..&#10;-&#10;Informasi ukuran bisa klik tanda seru di pojok kanan"
+                    required
+                    value={formData.playerList}
+                    onChange={handleChange}
+                  ></textarea>
+                </div>
+                <motion.button
+                  style={{ width: "20vw" }}
+                  whileTap={{ rotate: "2.5deg" }}
+                  whileHover={{
+                    scale: 1.2,
+                  }}
+                  transition={{ duration: 0.1 }}
+                  type="submit"
+                  className="btn btn-warning float-right"
+                  disabled={
+                    formData.materialImage === null ||
+                    formData.patternImage === null
+                  }
+                >
+                  {isLoading ? (
+                    <Spinner animation="border" size="sm" />
+                  ) : (
+                    "Kirim"
+                  )}
+                </motion.button>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
-      <ModalOrder
-        show={showModal}
-        handleClose={() => setShowModal(false)}
-        handleImageSelection={handleImageSelection}
-        modalType={modalType}
-      />
-      <Footer />
+        <ModalOrder
+          show={showModal}
+          handleClose={() => setShowModal(false)}
+          handleImageSelection={handleImageSelection}
+          modalType={modalType}
+        />
+        <Footer />
+      </main>
     </>
   );
 };

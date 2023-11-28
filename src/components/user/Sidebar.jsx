@@ -1,22 +1,8 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import supabase from "../../config/clientSupabase";
-const Sidebar = (isActive) => {
-  const navigate = useNavigate();
 
-  const handleLogout = async () => {
-    try {
-      const { error } = await supabase.auth.signOut();
-      if (!error) {
-        navigate("/login", { replace: true }); // Navigasi langsung ke halaman login
-      } else {
-        console.error("Logout error:", error);
-      }
-    } catch (error) {
-      console.error("Logout error:", error.message);
-    }
-  };
+const Sidebar = (isActive) => {
   const { pathname } = useLocation();
   return (
     <>
@@ -51,15 +37,13 @@ const Sidebar = (isActive) => {
           <ul className="navbar-nav">
             <li className="nav-item">
               <a
-                className={
-                  pathname === "/dashboard" ? "nav-link active" : "nav-link"
-                }
-                href="/dashboard"
+                className={pathname === "/" ? "nav-link active" : "nav-link"}
+                href="/"
               >
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                  <i className="fa-solid fa-chart-simple"></i>
+                  <i className="fa-solid fa-house"></i>
                 </div>
-                <span className="nav-link-text ms-1">Dashboard</span>
+                <span className="nav-link-text ms-1">Home</span>
               </a>
             </li>
           </ul>
@@ -67,9 +51,9 @@ const Sidebar = (isActive) => {
             <li className="nav-item">
               <a
                 className={
-                  pathname === "/admin/product" ? "nav-link active" : "nav-link"
+                  pathname === "/product" ? "nav-link active" : "nav-link"
                 }
-                href="/admin/product"
+                href="/product"
               >
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                   <i className="fa-solid fa-shirt"></i>
@@ -82,44 +66,14 @@ const Sidebar = (isActive) => {
             <li className="nav-item">
               <a
                 className={
-                  pathname === "/admin/bahan" ? "nav-link active" : "nav-link"
+                  pathname === "/about" ? "nav-link active" : "nav-link"
                 }
-                href="/admin/bahan"
+                href="/about"
               >
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                  <i className="fa-solid fa-scroll"></i>
+                  <i className="fa-solid fa-copyright"></i>
                 </div>
-                <span className="nav-link-text ms-1">Jenis Bahan</span>
-              </a>
-            </li>
-          </ul>
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              <a
-                className={
-                  pathname === "/admin/pola" ? "nav-link active" : "nav-link"
-                }
-                href="/admin/pola"
-              >
-                <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                  <i className="fa-solid fa-scissors"></i>
-                </div>
-                <span className="nav-link-text ms-1">Pola Jahitan</span>
-              </a>
-            </li>
-          </ul>
-          <hr className="horizontal dark mt-5" />
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              {/* eslint-disable-next-line */}
-              <a className="nav-link active2">
-                <div
-                  onClick={handleLogout}
-                  className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center"
-                >
-                  <i className="fa-solid fa-right-from-bracket"></i>
-                </div>
-                <span className="nav-link-text ms-1">Logout</span>
+                <span className="nav-link-text ms-1">About</span>
               </a>
             </li>
           </ul>
