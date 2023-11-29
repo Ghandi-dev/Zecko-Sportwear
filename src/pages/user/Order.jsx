@@ -186,6 +186,7 @@ const Order = () => {
                       name="pola"
                       className="form-control ml-1"
                       value={formData.patternImageName}
+                      required
                       disabled
                     />
                   </div>
@@ -210,6 +211,7 @@ const Order = () => {
                       name="material"
                       className="form-control ml-1"
                       value={formData.materialImageName}
+                      required
                       disabled
                     />
                   </div>
@@ -242,7 +244,7 @@ const Order = () => {
                   ></textarea>
                 </div>
                 <motion.button
-                  style={{ width: "20vw" }}
+                  style={{ width: "100%" }}
                   whileTap={{ rotate: "2.5deg" }}
                   whileHover={{
                     scale: 1.2,
