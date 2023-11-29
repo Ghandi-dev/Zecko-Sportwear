@@ -1,6 +1,8 @@
+import React, { useState, useEffect } from "react";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Modal, Button } from "react-bootstrap";
+import supabase from "../../config/clientSupabase";
 
 // Import Swiper styles
 import "swiper/css";
@@ -9,18 +11,44 @@ import "swiper/css/pagination";
 
 import "./modal.css";
 
-// import required modules
 import { Pagination, EffectCards } from "swiper/modules";
-import React from "react";
 
 const ModalOrder = ({ show, handleClose, handleImageSelection, modalType }) => {
-  const images = [
-    "https://i.imgur.com/SaIC9la.jpg",
-    "https://i.imgur.com/pv2SBFA.jpg",
-    "https://i.imgur.com/z2Duai6.jpg",
-    // Tambahkan URL gambar lainnya
-  ];
+  const CDN_URL = process.env.REACT_APP_CDN_URL;
+  const [pola, setPola] = useState();
+  const [bahan, setbahan] = useState({ nama: "", image_url: "" });
+  let images = [];
 
+  // const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const getBahan = async () => {
+      const { data, error } = await supabase.from("bahan").select("*");
+      if (!error) {
+        setbahan(data);
+      } else {
+        console.log("error");
+      }
+    };
+    const getPola = async () => {
+      const { data, error } = await supabase.from("pola").select("*");
+      if (!error) {
+        setPola(data);
+      } else {
+        console.log("error");
+      }
+    };
+    getPola();
+    getBahan();
+  }, []);
+  if (modalType === "Pola") {
+    images = pola;
+  } else if (modalType === "Bahan") {
+    images = bahan;
+  } else {
+    images = ["https://i.imgur.com/z2Duai6.jpg"];
+  }
+  // console.log(images);
   return (
     <div>
       <Modal show={show} onHide={handleClose}>
@@ -42,13 +70,14 @@ const ModalOrder = ({ show, handleClose, handleImageSelection, modalType }) => {
             pagination={true}
             className="mySwiper"
           >
-            {images.map((imageUrl, index) => (
+            {images.map((data, index) => (
               <SwiperSlide key={index}>
+                <p>{data.nama}</p>
                 <img
-                  src={imageUrl}
+                  src={modalType !== "Info" ? CDN_URL + data.image_url : data}
                   alt={`Gambar ${index + 1}`}
                   //   style={{ width: "100%", height: "auto" }}
-                  onClick={() => handleImageSelection(imageUrl, modalType)}
+                  onClick={() => handleImageSelection(data, modalType)}
                 />
               </SwiperSlide>
             ))}

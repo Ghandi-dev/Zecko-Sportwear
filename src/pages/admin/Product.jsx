@@ -13,7 +13,9 @@ const ProductAdmin = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState(null);
   const [idImage, setIdImage] = useState(null);
+  const [search, setSearch] = useState("");
 
+  // handle untuk membuka sidebar
   const handleButtonClick = () => {
     // Menambah kelas pada elemen <body>
     !document.body.classList.contains("g-sidenav-pinned")
@@ -38,6 +40,19 @@ const ProductAdmin = () => {
     getProducts();
   }, []);
 
+  // mengambil data product by id
+  const getProductById = async (id) => {
+    const { data, error } = await supabase
+      .from("products")
+      .select()
+      .eq("id", id);
+    if (!error) {
+      return data;
+    } else {
+      console.log("error");
+    }
+  };
+
   //   hapus data
   const deleteData = (id) => {
     Swal.fire({
@@ -48,15 +63,30 @@ const ProductAdmin = () => {
     }).then(async (result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        const { error } = await supabase.from("products").delete().eq("id", id);
-        if (!error) {
-          getProducts();
-          Swal.fire({
-            icon: "success",
-            title: "Data berhasil dihapus",
-            confirmButtonText: "OK",
+        getProductById(id)
+          .then(async (result) => {
+            const { data: dataDeletProduct, error: errorDeletProduct } =
+              await supabase.storage
+                .from("images")
+                .remove([result[0].image_url]);
+            const { error } = await supabase
+              .from("products")
+              .delete()
+              .eq("id", id);
+            if (!error && !errorDeletProduct) {
+              console.log(dataDeletProduct);
+              getProducts();
+              Swal.fire({
+                icon: "success",
+                title: "Data berhasil dihapus",
+                confirmButtonText: "OK",
+              });
+            }
+          })
+          .catch((error) => {
+            // Tangani error jika terjadi
+            console.error(error);
           });
-        }
       }
     });
   };
@@ -142,9 +172,29 @@ const ProductAdmin = () => {
               </div>
             </div>
           </div>
+          {/* form search */}
+          <div className="row justify-content-end">
+            <div className="col-md-12 col-lg-2">
+              <form>
+                <div className="form-group">
+                  <input
+                    type="text"
+                    // value={search}
+                    className="form-control"
+                    placeholder="Cari product"
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </div>
+              </form>
+            </div>
+          </div>
           <DataTable
             columns={columns}
-            data={data}
+            data={data.filter((item) => {
+              return search.toLowerCase() === ""
+                ? item
+                : item.name.toLowerCase().includes(search);
+            })}
             striped
             highlightOnHover
             fixedHeader

@@ -4,68 +4,57 @@ import { Modal, Button, Spinner } from "react-bootstrap";
 import supabase from "../../config/clientSupabase";
 import Swal from "sweetalert2";
 import uuid from "react-uuid";
-import { FormatRupiah } from "@arismun/format-rupiah";
 import { customLog } from "../../utils/CustomLogger";
 
 import "./modal.css";
 const CDN_URL = process.env.REACT_APP_CDN_URL;
 
-export const ModalDetail = ({
-  show,
-  handleClose,
-  modalType,
-  id,
-  getProducts,
-}) => {
-  const [product, setProduct] = useState({
-    name: "",
-    price: "",
-    image_url: "",
+export const ModalDetail = ({ show, handleClose, modalType, id, getPola }) => {
+  const [pola, setPola] = useState({
+    nama: "",
   });
-  const [productImage, setProductImage] = useState(null);
-  const [dataProduct, setDataProduct] = useState([]);
+  const [polaImage, setPolaImage] = useState(null);
+  const [dataPola, setDataPola] = useState([]);
 
-  // handle image pada form
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setProductImage(file);
+    setPolaImage(file);
   };
 
-  // update data product
-  const handleUpdateProduct = async () => {
+  //   update data pola
+  const handleUpdatePola = async () => {
     let imageUploadData = {};
-    if (productImage !== null) {
+    if (polaImage !== null) {
       const { data: imageUpload, error: imageUploadError } =
         await supabase.storage
           .from("images")
-          .upload(`product/` + uuid(), productImage);
+          .upload(`pola/` + uuid(), polaImage);
       imageUploadData = imageUpload;
+
       if (imageUploadError) {
         console.error("Error uploading image:", imageUploadError.message);
         return;
       } else {
         // eslint-disable-next-line
         const { data: deletImageData, error: deletImageError } =
-          await supabase.storage.from("images").remove([product.image_url]);
+          await supabase.storage.from("images").remove([pola.image_url]);
         deletImageError
           ? customLog("Error delete image")
           : customLog("Image berhasil dihapus");
       }
     }
     const { error } = await supabase
-      .from("products")
+      .from("pola")
       .update({
-        name: product.name,
-        price: parseFloat(product.price),
-        image_url:
-          productImage === null ? product.image_url : imageUploadData.path,
+        nama: pola.nama,
+        image_url: polaImage === null ? pola.image_url : imageUploadData.path,
       })
       .eq("id", id);
 
     if (error) {
-      console.error("Error edit product:", error.message);
+      console.error("Error edit pola:", error.message);
     } else {
-      getProducts();
+      getPola();
       handleClose();
       Swal.fire({
         icon: "success",
@@ -75,14 +64,11 @@ export const ModalDetail = ({
     }
   };
 
-  // mendapatkan product by id
-  const getProductsById = async () => {
-    const { data, error } = await supabase
-      .from("products")
-      .select()
-      .eq("id", id);
+  //   mengambil data pola by id
+  const getPolaByid = async () => {
+    const { data, error } = await supabase.from("pola").select().eq("id", id);
     if (!error) {
-      setDataProduct(data[0]);
+      setDataPola(data[0]);
     } else {
       console.log("error");
     }
@@ -90,21 +76,22 @@ export const ModalDetail = ({
 
   useEffect(() => {
     if (show) {
-      getProductsById();
+      getPolaByid();
     }
     // eslint-disable-next-line
   }, [show]);
+
   useEffect(() => {
-    if (dataProduct.name !== undefined && dataProduct.price !== undefined) {
-      setProduct({
-        ...product,
-        name: dataProduct.name,
-        price: dataProduct.price,
-        image_url: dataProduct.image_url,
+    if (dataPola.nama !== undefined) {
+      setPola({
+        ...pola,
+        nama: dataPola.nama,
+        image_url: dataPola.image_url,
       });
     }
     // eslint-disable-next-line
-  }, [dataProduct]);
+  }, [dataPola]);
+
   return (
     <div>
       <Modal show={show} onHide={handleClose}>
@@ -116,9 +103,7 @@ export const ModalDetail = ({
             <>
               <img
                 src={
-                  product.image_url !== undefined
-                    ? CDN_URL + product.image_url
-                    : ""
+                  pola.image_url !== undefined ? CDN_URL + pola.image_url : ""
                 }
                 className="rounded"
                 alt={`Gambar ${id}`}
@@ -139,10 +124,7 @@ export const ModalDetail = ({
                 }}
               >
                 <ul className="list-group list-group-flush">
-                  <li className="list-group-item">Nama : {product.name}</li>
-                  <li className="list-group-item">
-                    Harga : {<FormatRupiah value={product.price} />}
-                  </li>
+                  <li className="list-group-item">Nama : {pola.nama}</li>
                 </ul>
               </div>
             </>
@@ -150,29 +132,16 @@ export const ModalDetail = ({
             <>
               <form>
                 <div className="mb-3">
-                  <label className="form-label">Product Name:</label>
+                  <label className="form-label">Nama Pola:</label>
                   <input
                     type="text"
                     className="form-control"
-                    value={product.name}
-                    onChange={(e) =>
-                      setProduct({ ...product, name: e.target.value })
-                    }
+                    value={pola.nama}
+                    onChange={(e) => setPola({ ...pola, nama: e.target.value })}
                   />
                 </div>
                 <div className="mb-3">
-                  <label className="form-label">Product Price:</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    value={product.price}
-                    onChange={(e) =>
-                      setProduct({ ...product, price: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Product Image:</label>
+                  <label className="form-label">Pola Image:</label>
                   <input
                     type="file"
                     className="form-control"
@@ -184,7 +153,7 @@ export const ModalDetail = ({
                   type="button"
                   className="btn bg-gradient-info"
                   style={{ float: "right" }}
-                  onClick={handleUpdateProduct}
+                  onClick={handleUpdatePola}
                 >
                   Edit
                 </button>
@@ -206,54 +175,47 @@ export const ModalDetail = ({
   );
 };
 
-export const ModalTambah = ({ show, handleClose, modalType, getProducts }) => {
-  const [product, setProduct] = useState({
-    name: "",
-    price: "",
+export const ModalTambah = ({ show, handleClose, modalType, getPola }) => {
+  const [pola, setPola] = useState({
+    nama: "",
   });
-  // const [productName, setProductName] = useState("");
-  // const [productPrice, setProductPrice] = useState("");
-  const [productImage, setProductImage] = useState(null);
+  const [polaImage, setPolaImage] = useState(null);
   const [isloading, setLoading] = useState(null);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setProductImage(file);
+    setPolaImage(file);
   };
 
-  const handleAddProduct = async () => {
+  const handleAddPola = async () => {
     setLoading(true);
     const { data: imageUploadData, error: imageUploadError } =
-      await supabase.storage
-        .from("images")
-        .upload(`product/` + uuid(), productImage);
+      await supabase.storage.from("images").upload(`pola/` + uuid(), polaImage);
 
     if (imageUploadError) {
       console.error("Error uploading image:", imageUploadError.message);
       return;
     }
-    console.log(imageUploadData);
-    const { data, error } = await supabase.from("products").upsert([
+    const { data, error } = await supabase.from("pola").upsert([
       {
-        name: product.name,
-        price: parseFloat(product.price),
+        nama: pola.nama,
         image_url: imageUploadData.path,
       },
     ]);
 
     if (error) {
-      console.error("Error adding product:", error.message);
+      console.error("Error adding pola:", error.message);
     } else {
       setLoading(false);
-      getProducts();
+      getPola();
       handleClose();
       Swal.fire({
         icon: "success",
         title: "Data berhasil ditambahkan",
         confirmButtonText: "OK",
       });
-      console.log("Product added successfully:", data);
-      setProduct({ ...product, name: "", price: "" });
+      console.log("Pola added successfully:", data);
+      // window.location.reload();
     }
   };
 
@@ -270,21 +232,8 @@ export const ModalTambah = ({ show, handleClose, modalType, getProducts }) => {
               <input
                 type="text"
                 className="form-control"
-                value={product.name}
-                onChange={(e) =>
-                  setProduct({ ...product, name: e.target.value })
-                }
-              />
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Harga</label>
-              <input
-                type="number"
-                className="form-control"
-                value={product.price}
-                onChange={(e) =>
-                  setProduct({ ...product, price: e.target.value })
-                }
+                value={pola.nama}
+                onChange={(e) => setPola({ ...pola, nama: e.target.value })}
               />
             </div>
             <div className="mb-3">
@@ -299,7 +248,7 @@ export const ModalTambah = ({ show, handleClose, modalType, getProducts }) => {
             <button
               type="button"
               className="btn bg-gradient-info"
-              onClick={handleAddProduct}
+              onClick={handleAddPola}
               style={{ float: "right" }}
             >
               {isloading ? <Spinner animation="border" size="sm" /> : "Kirim"}

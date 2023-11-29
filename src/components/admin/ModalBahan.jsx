@@ -4,21 +4,18 @@ import { Modal, Button, Spinner } from "react-bootstrap";
 import supabase from "../../config/clientSupabase";
 import Swal from "sweetalert2";
 import uuid from "react-uuid";
+import { customLog } from "../../utils/CustomLogger";
 
 import "./modal.css";
 const CDN_URL = process.env.REACT_APP_CDN_URL;
 
-export const ModalDetail = ({
-  show,
-  handleClose,
-  modalType,
-  id,
-  getBahans,
-}) => {
-  const [bahanName, setBahanName] = useState("");
-  const [bahanDeskripsi, setBahanDeskripsi] = useState("");
+export const ModalDetail = ({ show, handleClose, modalType, id, getBahan }) => {
+  const [bahan, setBahan] = useState({
+    nama: "",
+    deskripsi: "",
+    image_url: "",
+  });
   const [bahanImage, setBahanImage] = useState(null);
-  const [imageUploadData, setImageUploadData] = useState(null);
   const [dataBahan, setDataBahan] = useState([]);
 
   const handleImageChange = (e) => {
@@ -26,42 +23,52 @@ export const ModalDetail = ({
     setBahanImage(file);
   };
 
+  //   update data bahan
   const handleUpdateBahan = async () => {
+    let imageUploadData = {};
     if (bahanImage !== null) {
-      const { data: imageUploadData, error: imageUploadError } =
+      const { data: imageUpload, error: imageUploadError } =
         await supabase.storage
           .from("images")
           .upload(`bahan/` + uuid(), bahanImage);
-      setImageUploadData(imageUploadData);
+      imageUploadData = imageUpload;
+
       if (imageUploadError) {
         console.error("Error uploading image:", imageUploadError.message);
         return;
+      } else {
+        // eslint-disable-next-line
+        const { data: deletImageData, error: deletImageError } =
+          await supabase.storage.from("images").remove([bahan.image_url]);
+        deletImageError
+          ? customLog("Error delete image")
+          : customLog("Image berhasil dihapus");
       }
     }
     const { error } = await supabase
       .from("bahan")
       .update({
-        nama: bahanName,
-        deskripsi: bahanDeskripsi,
-        image_url:
-          bahanImage === null ? dataBahan.image_url : imageUploadData.path,
+        nama: bahan.nama,
+        deskripsi: bahan.deskripsi,
+        image_url: bahanImage === null ? bahan.image_url : imageUploadData.path,
       })
       .eq("id", id);
 
     if (error) {
-      console.error("Error adding bahan:", error.message);
+      console.error("Error edit bahan:", error.message);
     } else {
-      getBahans();
+      getBahan();
       handleClose();
       Swal.fire({
         icon: "success",
-        title: "Data berhasil ditambahkan",
+        title: "Data berhasil diedit",
         confirmButtonText: "OK",
       });
     }
   };
 
-  const getBahansById = async () => {
+  //   mengambil data bahan berdasarkan id
+  const getBahanById = async () => {
     const { data, error } = await supabase.from("bahan").select().eq("id", id);
     if (!error) {
       setDataBahan(data[0]);
@@ -72,15 +79,23 @@ export const ModalDetail = ({
 
   useEffect(() => {
     if (show) {
-      getBahansById();
+      getBahanById();
     }
+    // eslint-disable-next-line
   }, [show]);
+
   useEffect(() => {
     if (dataBahan.nama !== undefined && dataBahan.deskripsi !== undefined) {
-      setBahanName(dataBahan.nama);
-      setBahanDeskripsi(dataBahan.deskripsi);
+      setBahan({
+        ...bahan,
+        nama: dataBahan.nama,
+        deskripsi: dataBahan.deskripsi,
+        image_url: dataBahan.image_url,
+      });
     }
+    // eslint-disable-next-line
   }, [dataBahan]);
+
   return (
     <div>
       <Modal show={show} onHide={handleClose}>
@@ -92,9 +107,7 @@ export const ModalDetail = ({
             <>
               <img
                 src={
-                  dataBahan.image_url !== undefined
-                    ? CDN_URL + dataBahan.image_url
-                    : ""
+                  bahan.image_url !== undefined ? CDN_URL + bahan.image_url : ""
                 }
                 className="rounded"
                 alt={`Gambar ${id}`}
@@ -115,9 +128,9 @@ export const ModalDetail = ({
                 }}
               >
                 <ul className="list-group list-group-flush">
-                  <li className="list-group-item">Nama : {dataBahan.name}</li>
+                  <li className="list-group-item">Nama : {bahan.nama}</li>
                   <li className="list-group-item">
-                    Deskripsi : {dataBahan.deskripsi}
+                    Deskripsi : {bahan.deskripsi}
                   </li>
                 </ul>
               </div>
@@ -130,8 +143,10 @@ export const ModalDetail = ({
                   <input
                     type="text"
                     className="form-control"
-                    value={bahanName}
-                    onChange={(e) => setBahanName(e.target.value)}
+                    value={bahan.nama}
+                    onChange={(e) =>
+                      setBahan({ ...bahan, nama: e.target.value })
+                    }
                   />
                 </div>
                 <div className="mb-3">
@@ -139,8 +154,10 @@ export const ModalDetail = ({
                   <input
                     type="text"
                     className="form-control"
-                    value={bahanDeskripsi}
-                    onChange={(e) => setBahanDeskripsi(e.target.value)}
+                    value={bahan.deskripsi}
+                    onChange={(e) =>
+                      setBahan({ ...bahan, deskripsi: e.target.value })
+                    }
                   />
                 </div>
                 <div className="mb-3">
@@ -178,9 +195,11 @@ export const ModalDetail = ({
   );
 };
 
-export const ModalTambah = ({ show, handleClose, modalType, getBahans }) => {
-  const [bahanName, setBahanName] = useState("");
-  const [bahanDeskripsi, setBahanDeskripsi] = useState("");
+export const ModalTambah = ({ show, handleClose, modalType, getBahan }) => {
+  const [bahan, setBahan] = useState({
+    nama: "",
+    deskripsi: "",
+  });
   const [bahanImage, setBahanImage] = useState(null);
   const [isloading, setLoading] = useState(null);
 
@@ -202,8 +221,8 @@ export const ModalTambah = ({ show, handleClose, modalType, getBahans }) => {
     }
     const { data, error } = await supabase.from("bahan").upsert([
       {
-        nama: bahanName,
-        deskripsi: bahanDeskripsi,
+        nama: bahan.nama,
+        deskripsi: bahan.deskripsi,
         image_url: imageUploadData.path,
       },
     ]);
@@ -212,7 +231,7 @@ export const ModalTambah = ({ show, handleClose, modalType, getBahans }) => {
       console.error("Error adding bahan:", error.message);
     } else {
       setLoading(false);
-      getBahans();
+      getBahan();
       handleClose();
       Swal.fire({
         icon: "success",
@@ -237,8 +256,8 @@ export const ModalTambah = ({ show, handleClose, modalType, getBahans }) => {
               <input
                 type="text"
                 className="form-control"
-                value={bahanName}
-                onChange={(e) => setBahanName(e.target.value)}
+                value={bahan.nama}
+                onChange={(e) => setBahan({ ...bahan, nama: e.target.value })}
               />
             </div>
             <div className="mb-3">
@@ -246,8 +265,10 @@ export const ModalTambah = ({ show, handleClose, modalType, getBahans }) => {
               <input
                 type="text"
                 className="form-control"
-                value={bahanDeskripsi}
-                onChange={(e) => setBahanDeskripsi(e.target.value)}
+                value={bahan.deskripsi}
+                onChange={(e) =>
+                  setBahan({ ...bahan, deskripsi: e.target.value })
+                }
               />
             </div>
             <div className="mb-3">

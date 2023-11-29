@@ -12,6 +12,7 @@ const Bahan = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState(null);
   const [idImage, setIdImage] = useState(null);
+  const [search, setSearch] = useState("");
 
   const handleButtonClick = () => {
     // Menambah kelas pada elemen <body>
@@ -24,8 +25,8 @@ const Bahan = () => {
     }
   };
 
-  //   mengambil data product
-  const getBahans = async () => {
+  //   mengambil data bahan
+  const getBahan = async () => {
     const { data, error } = await supabase.from("bahan").select("*");
     if (!error) {
       setData(data);
@@ -34,8 +35,9 @@ const Bahan = () => {
     }
   };
   useEffect(() => {
-    getBahans();
+    getBahan();
   }, []);
+  // mengambil data bahan by id
   const getBahanById = async (id) => {
     const { data, error } = await supabase.from("bahan").select().eq("id", id);
     if (!error) {
@@ -66,7 +68,7 @@ const Bahan = () => {
               .eq("id", id);
             if (!error && !errorDeletFile) {
               console.log(dataDeletFile);
-              getBahans();
+              getBahan();
               Swal.fire({
                 icon: "success",
                 title: "Data berhasil dihapus",
@@ -162,9 +164,29 @@ const Bahan = () => {
               </div>
             </div>
           </div>
+          {/* form search */}
+          <div className="row justify-content-end">
+            <div className="col-md-12 col-lg-2">
+              <form>
+                <div className="form-group">
+                  <input
+                    type="text"
+                    // value={search}
+                    className="form-control"
+                    placeholder="Cari bahan"
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </div>
+              </form>
+            </div>
+          </div>
           <DataTable
             columns={columns}
-            data={data}
+            data={data.filter((item) => {
+              return search.toLowerCase() === ""
+                ? item
+                : item.nama.toLowerCase().includes(search);
+            })}
             striped
             highlightOnHover
             fixedHeader
@@ -176,7 +198,7 @@ const Bahan = () => {
           <ModalDetail
             show={showModal}
             modalType={modalType}
-            getBahans={getBahans}
+            getBahan={getBahan}
             handleClose={() => setShowModal(false)}
             id={idImage}
           />
@@ -184,7 +206,7 @@ const Bahan = () => {
           <ModalTambah
             show={showModal}
             modalType={modalType}
-            getBahans={getBahans}
+            getBahan={getBahan}
             handleClose={() => setShowModal(false)}
           />
         )}

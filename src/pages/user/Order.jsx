@@ -7,6 +7,7 @@ import Spinner from "react-bootstrap/Spinner";
 
 const telegramBotToken = process.env.REACT_APP_TOKEN_TELEGRAM;
 const chatId = process.env.REACT_APP_CHAT_ID;
+const CDN_URL = process.env.REACT_APP_CDN_URL;
 
 const Order = () => {
   const defaultImage = null;
@@ -15,7 +16,9 @@ const Order = () => {
     noWa: "",
     design: defaultImage,
     patternImage: "",
+    patternImageName: "",
     materialImage: "",
+    materialImageName: "",
     playerList: "",
   };
   const [showModal, setShowModal] = useState(false);
@@ -45,11 +48,19 @@ const Order = () => {
     }
   };
 
-  const handleImageSelection = (imageUrl, modalType) => {
-    if (modalType === "Pola" || modalType === "Material") {
+  const handleImageSelection = (data, modalType) => {
+    if (modalType === "Pola" || modalType === "Bahan") {
       modalType === "Pola"
-        ? setFormData({ ...formData, patternImage: imageUrl })
-        : setFormData({ ...formData, materialImage: imageUrl });
+        ? setFormData({
+            ...formData,
+            patternImage: CDN_URL + data.image_url,
+            patternImageName: data.nama,
+          })
+        : setFormData({
+            ...formData,
+            materialImage: CDN_URL + data.image_url,
+            materialImageName: data.nama,
+          });
     }
     setShowModal(false);
   };
@@ -173,8 +184,8 @@ const Order = () => {
                     <input
                       type="text"
                       name="pola"
-                      className="form-control"
-                      value={formData.patternImage}
+                      className="form-control ml-1"
+                      value={formData.patternImageName}
                       disabled
                     />
                   </div>
@@ -188,7 +199,7 @@ const Order = () => {
                         type="button"
                         onClick={() => {
                           setShowModal(true);
-                          setModalType("Material");
+                          setModalType("Bahan");
                         }}
                       >
                         Pilih
@@ -197,8 +208,8 @@ const Order = () => {
                     <input
                       type="text"
                       name="material"
-                      className="form-control"
-                      value={formData.materialImage}
+                      className="form-control ml-1"
+                      value={formData.materialImageName}
                       disabled
                     />
                   </div>
