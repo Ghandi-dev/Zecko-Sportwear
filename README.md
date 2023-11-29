@@ -13,7 +13,10 @@ https://zecko-sportwear.vercel.app/
 
 ## Screenshots
 
-![App Screenshot](https://i.imgur.com/tt8hDeb.png)
+- User
+  ![App Screenshot](https://i.imgur.com/tt8hDeb.png)
+- Admin
+  ![App Screenshot](https://i.imgur.com/0rlnNh2.png)
 
 ## Run Locally
 
@@ -26,7 +29,7 @@ Clone the project
 Go to the project directory
 
 ```bash
-  cd React_E-Commerce
+  cd Zecko-Sportwear
 ```
 
 Install dependencies
