@@ -2,6 +2,16 @@ import React from "react";
 import { motion } from "framer-motion";
 
 const Home = () => {
+  const imagePorto = [
+    { url: "https://i.imgur.com/ohyGDe2.jpg", detail: "Zecko x Electric" },
+    { url: "https://i.imgur.com/ctsTCYK.jpg", detail: "Zecko x TBSM Neple" },
+    { url: "https://i.imgur.com/qMTnUEA.jpg", detail: "Zecko x GTS" },
+    { url: "https://i.imgur.com/nHSBuzC.jpg", detail: "Zecko x GHOPER FC" },
+    { url: "https://i.imgur.com/KwvWh0T.jpg", detail: "Zecko x Best Friend" },
+    // "https://i.imgur.com/qMTnUEA.jpg",
+    // "https://i.imgur.com/nHSBuzC.jpg",
+    // "https://i.imgur.com/KwvWh0T.jpg",
+  ];
   return (
     <>
       <div className="hero border-1 pb-3">
@@ -114,60 +124,25 @@ const Home = () => {
           </div>
         </div>
 
-        <h1 className="text-center py-4">Produk Kami</h1>
-        <div className="row">
-          <div className="col-md-3 col-sm-6 mb-3 px-3">
-            <div className="card h-100">
-              <img
-                className="card-img-top img-fluid"
-                src="https://images.pexels.com/photos/298863/pexels-photo-298863.jpeg?auto=compress&cs=tinysrgb&w=600"
-                alt=""
-                height={160}
-              />
-              <div className="card-body">
-                <h5 className="card-title text-center">Mens's Clothing</h5>
+        <h1 className="text-center py-4">Portofolio Kami</h1>
+        <div className="row justify-content-center">
+          {imagePorto.map((item, index) => {
+            return (
+              <div className="col-md-3 col-sm-6 mb-3 px-3" key={index}>
+                <div className="card h-100">
+                  <img
+                    className="card-img-top img-fluid"
+                    src={item.url}
+                    alt=""
+                    height={160}
+                  />
+                  <div className="card-body">
+                    <h5 className="card-title text-center">{item.detail}</h5>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="col-md-3 col-sm-6 mb-3 px-3">
-            <div className="card h-100">
-              <img
-                className="card-img-top img-fluid"
-                src="https://images.pexels.com/photos/7679720/pexels-photo-7679720.jpeg?auto=compress&cs=tinysrgb&w=600"
-                alt=""
-                height={160}
-              />
-              <div className="card-body">
-                <h5 className="card-title text-center">Women's Clothing</h5>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3 col-sm-6 mb-3 px-3">
-            <div className="card h-100">
-              <img
-                className="card-img-top img-fluid"
-                src="https://images.pexels.com/photos/1927259/pexels-photo-1927259.jpeg?auto=compress&cs=tinysrgb&w=600"
-                alt=""
-                height={160}
-              />
-              <div className="card-body">
-                <h5 className="card-title text-center">Jewelery</h5>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3 col-sm-6 mb-3 px-3">
-            <div className="card h-100">
-              <img
-                className="card-img-top img-fluid"
-                src="https://images.pexels.com/photos/356056/pexels-photo-356056.jpeg?auto=compress&cs=tinysrgb&w=600"
-                alt=""
-                height={160}
-              />
-              <div className="card-body">
-                <h5 className="card-title text-center">Electronics</h5>
-              </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
       <a

@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import ModalOrder from "../../components/user/ModalOrder";
 import Swal from "sweetalert2";
 import Spinner from "react-bootstrap/Spinner";
+import supabase from "../../config/clientSupabase";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const telegramBotToken = process.env.REACT_APP_TOKEN_TELEGRAM;
 const chatId = process.env.REACT_APP_CHAT_ID;
@@ -19,6 +21,7 @@ const Order = () => {
     patternImageName: "",
     materialImage: "",
     materialImageName: "",
+    qty: null,
     playerList: "",
   };
   const [showModal, setShowModal] = useState(false);
@@ -26,6 +29,7 @@ const Order = () => {
   const [formData, setFormData] = useState(defaultFormData);
   const [isLoading, setIsLoading] = useState(false);
   const [asideIsActive, setAsideIsActive] = useState(false);
+  const [isValid, setValid] = useState(false);
 
   const handleButtonClick = () => {
     // Menambah kelas pada elemen <body>
@@ -64,12 +68,13 @@ const Order = () => {
     }
     setShowModal(false);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formDataTelegram = new FormData(e.target);
     const image1 = formDataTelegram.get("design");
 
-    const message = `Nama: ${formData.nama}\nNomor WA: ${formData.noWa}\nPemain :\n${formData.playerList}`;
+    const message = `Nama: ${formData.nama}\nNomor WA: ${formData.noWa}\nJumlah:${formData.qty}\nPemain :\n${formData.playerList}`;
     const mediaArray = [
       {
         type: "photo",
@@ -98,6 +103,19 @@ const Order = () => {
           body: formDataTelegram,
         }
       );
+      // eslint-disable-next-line
+      const { data, error } = await supabase.from("pemesanan").upsert([
+        {
+          nama: formData.nama,
+          no_wa: formData.noWa,
+          pola: formData.patternImageName,
+          bahan: formData.materialImageName,
+          qty: formData.qty,
+        },
+      ]);
+      if (error) {
+        console.log(error);
+      }
       if (response.ok === true) {
         Swal.fire({
           icon: "success",
@@ -150,6 +168,17 @@ const Order = () => {
                     className="form-control"
                     required
                     value={formData.noWa}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Jumlah Jersey</label>
+                  <input
+                    name="qty"
+                    type="number"
+                    className="form-control"
+                    required
+                    value={formData.qty}
                     onChange={handleChange}
                   />
                 </div>
@@ -243,6 +272,12 @@ const Order = () => {
                     onChange={handleChange}
                   ></textarea>
                 </div>
+                <ReCAPTCHA
+                  sitekey="6Lea2SEpAAAAAGzY9BAHM-3mykK_ka21BpDTcKKJ"
+                  onChange={() => {
+                    setValid(true);
+                  }}
+                />
                 <motion.button
                   style={{ width: "100%" }}
                   whileTap={{ rotate: "2.5deg" }}
@@ -253,8 +288,9 @@ const Order = () => {
                   type="submit"
                   className="btn btn-warning float-right"
                   disabled={
-                    formData.materialImage === null ||
-                    formData.patternImage === null
+                    formData.materialImage === "" ||
+                    formData.patternImage === "" ||
+                    !isValid
                   }
                 >
                   {isLoading ? (

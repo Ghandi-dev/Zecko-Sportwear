@@ -20,6 +20,7 @@ const Navbar = ({ handleButtonClick, title }) => {
             <div className="ms-md-auto pe-md-3 d-flex align-items-center"></div>
             <ul className="navbar-nav  justify-content-end">
               <li className="nav-item d-xl-none ps-3 d-flex align-items-center">
+                {/*  eslint-disable-next-line */}
                 <a
                   href={undefined}
                   className="nav-link text-body p-0"

@@ -211,8 +211,6 @@ export const ModalTambah = ({ show, handleClose, modalType, getProducts }) => {
     name: "",
     price: "",
   });
-  // const [productName, setProductName] = useState("");
-  // const [productPrice, setProductPrice] = useState("");
   const [productImage, setProductImage] = useState(null);
   const [isloading, setLoading] = useState(null);
 

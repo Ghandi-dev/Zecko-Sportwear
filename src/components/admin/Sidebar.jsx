@@ -57,7 +57,14 @@ const Sidebar = (isActive) => {
                 href="/dashboard"
               >
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                  <i className="fa-solid fa-chart-simple"></i>
+                  <i
+                    className="fa-solid fa-chart-simple"
+                    style={
+                      pathname === "/dashboard"
+                        ? { color: "black" }
+                        : { color: "white" }
+                    }
+                  ></i>
                 </div>
                 <span className="nav-link-text ms-1">Dashboard</span>
               </a>
@@ -72,7 +79,14 @@ const Sidebar = (isActive) => {
                 href="/admin/product"
               >
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                  <i className="fa-solid fa-shirt"></i>
+                  <i
+                    className="fa-solid fa-shirt"
+                    style={
+                      pathname === "/admin/product"
+                        ? { color: "black" }
+                        : { color: "white" }
+                    }
+                  ></i>
                 </div>
                 <span className="nav-link-text ms-1">Product</span>
               </a>
@@ -87,7 +101,14 @@ const Sidebar = (isActive) => {
                 href="/admin/bahan"
               >
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                  <i className="fa-solid fa-scroll"></i>
+                  <i
+                    className="fa-solid fa-scroll"
+                    style={
+                      pathname === "/admin/bahan"
+                        ? { color: "black" }
+                        : { color: "white" }
+                    }
+                  ></i>
                 </div>
                 <span className="nav-link-text ms-1">Jenis Bahan</span>
               </a>
@@ -102,7 +123,14 @@ const Sidebar = (isActive) => {
                 href="/admin/pola"
               >
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-                  <i className="fa-solid fa-scissors"></i>
+                  <i
+                    className="fa-solid fa-scissors"
+                    style={
+                      pathname === "/admin/pola"
+                        ? { color: "black" }
+                        : { color: "white" }
+                    }
+                  ></i>
                 </div>
                 <span className="nav-link-text ms-1">Pola Jahitan</span>
               </a>

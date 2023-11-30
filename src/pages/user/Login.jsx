@@ -54,7 +54,7 @@ const Login = () => {
                       <p className="mb-0">Masukan email dan password anda</p>
                     </div>
                     <div className="card-body">
-                      <form role="form" onSubmit={handleSubmit}>
+                      <form onSubmit={handleSubmit}>
                         <label>Email</label>
                         <div className="mb-3">
                           <input
