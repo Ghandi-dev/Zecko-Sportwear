@@ -206,11 +206,17 @@ const Dashboard = () => {
   return (
     <>
       <Sidebar isActive={asideIsActive} />
-      <main className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+      <main
+        className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg d-flex flex-column"
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+        }}
+      >
         <Navbar handleButtonClick={handleButtonClick} title={"DASHBOARD"} />
         <div className="container-fluid py-4">
           <div className="row justify-content-between">
-            <div className="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div className="col-xl-4 col-sm-6 mb-xl-0 mb-4">
               <div className="card">
                 <div className="card-body p-3">
                   <div className="row">
@@ -236,7 +242,7 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
-            <div className="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div className="col-xl-4 col-sm-6 mb-xl-0 mb-4">
               <div className="card">
                 <div className="card-body p-3">
                   <div className="row">
@@ -262,7 +268,7 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
-            <div className="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div className="col-xl-4 col-sm-6 mb-xl-0 mb-4">
               <div className="card">
                 <div className="card-body p-3">
                   <div className="row">
@@ -345,7 +351,7 @@ const Dashboard = () => {
           pagination
           progressPending={dataPemesanan.data ? false : true}
         />
-
+        <div className="flex-grow-1"></div> {/* Spacer */}
         <Footer />
       </main>
     </>

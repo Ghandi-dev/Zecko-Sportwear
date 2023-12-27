@@ -8,14 +8,13 @@ import supabase from "./config/clientSupabase";
 
 import { Home, Products, AboutPage, Login, PageNotFound } from "./pages/user";
 
-import { Dashboard, ProductAdmin, Bahan, Pola } from "./pages/admin";
+import { Dashboard, ProductAdmin, Bahan, Pola, Faktur } from "./pages/admin";
 
 const App = () => {
   const [session, setSession] = useState({});
   useEffect(() => {
     const checkUserLogin = async () => {
       const { data, error } = await supabase.auth.getSession();
-
       if (!error) {
         setSession(data);
       } else {
@@ -44,6 +43,10 @@ const App = () => {
         <Route
           path="/admin/pola"
           element={session.session !== null ? <Pola /> : <Login />}
+        />
+        <Route
+          path="/admin/faktur"
+          element={session.session !== null ? <Faktur /> : <Login />}
         />
         {/* user */}
         <Route path="/product" element={<Products />} />

@@ -27,13 +27,18 @@ const Login = () => {
         email: formData.email,
         password: formData.password,
       });
-
+      const access_token = data.session.access_token;
+      const refresh_token = data.session.refresh_token;
       if (error) throw error;
-      console.log(data);
+      const { dataSession, errorSession } = supabase.auth.setSession({
+        access_token,
+        refresh_token,
+      });
+      if (errorSession) throw errorSession;
       navigate("/dashboard");
       window.location.reload();
 
-      //   alert('Check your email for verification link')
+      alert("Check your email for verification link");
     } catch (error) {
       alert(error);
     }

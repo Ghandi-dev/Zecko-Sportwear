@@ -136,6 +136,28 @@ const Sidebar = (isActive) => {
               </a>
             </li>
           </ul>
+          <ul className="navbar-nav">
+            <li className="nav-item">
+              <a
+                className={
+                  pathname === "/admin/faktur" ? "nav-link active" : "nav-link"
+                }
+                href="/admin/faktur"
+              >
+                <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                  <i
+                    className="fa-solid fa-scissors"
+                    style={
+                      pathname === "/admin/faktur"
+                        ? { color: "black" }
+                        : { color: "white" }
+                    }
+                  ></i>
+                </div>
+                <span className="nav-link-text ms-1">Faktur</span>
+              </a>
+            </li>
+          </ul>
           <hr className="horizontal dark mt-5" />
           <ul className="navbar-nav">
             <li className="nav-item">

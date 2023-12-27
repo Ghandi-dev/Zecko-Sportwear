@@ -17,19 +17,17 @@ const AboutPage = () => {
     <>
       <Sidebar isActive={asideIsActive} />
       <main
-        className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg "
+        className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg d-flex flex-column"
         style={{
           minHeight: "100vh",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
         }}
       >
         <Navbar handleButtonClick={handleButtonClick} />
         <div className="container my-3 py-3">
           <h1 className="text-center">Tentang Kami</h1>
           <hr />
-          <p className=" text-center">
+          <p className="text-center">
             "Zecko Sportwear merupakan layanan pembuatan jersey olahraga custom
             baik untuk kebutuhan komunitas, tim, atau untuk event tertentu dalam
             jumlah banyak. Zecko Sportwear selalu mengutamakan layanan dan
@@ -46,6 +44,7 @@ const AboutPage = () => {
             Di kami tempatnya! Anda puas. Kami Bangga!"
           </p>
         </div>
+        <div className="flex-grow-1"></div> {/* Spacer */}
         <Footer />
       </main>
     </>

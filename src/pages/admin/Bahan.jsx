@@ -143,7 +143,13 @@ const Bahan = () => {
   return (
     <>
       <Sidebar isActive={asideIsActive} />
-      <main className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
+      <main
+        className="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg d-flex flex-column"
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+        }}
+      >
         <Navbar handleButtonClick={handleButtonClick} title={"BAHAN"} />
         <div className="container-fluid">
           <div className="bg-gradient-default rounded-top mt-3 pt-3 align-items-center">
@@ -210,6 +216,7 @@ const Bahan = () => {
             handleClose={() => setShowModal(false)}
           />
         )}
+        <div className="flex-grow-1"></div> {/* Spacer */}
         <Footer />
       </main>
     </>
