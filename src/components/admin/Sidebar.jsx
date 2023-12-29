@@ -74,6 +74,28 @@ const Sidebar = (isActive) => {
             <li className="nav-item">
               <a
                 className={
+                  pathname === "/admin/pesanan" ? "nav-link active" : "nav-link"
+                }
+                href="/admin/pesanan"
+              >
+                <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                  <i
+                    className="fa-solid fa-cart-shopping"
+                    style={
+                      pathname === "/admin/pesanan"
+                        ? { color: "black" }
+                        : { color: "white" }
+                    }
+                  ></i>
+                </div>
+                <span className="nav-link-text ms-1">Pesanan</span>
+              </a>
+            </li>
+          </ul>
+          <ul className="navbar-nav">
+            <li className="nav-item">
+              <a
+                className={
                   pathname === "/admin/product" ? "nav-link active" : "nav-link"
                 }
                 href="/admin/product"
@@ -88,7 +110,7 @@ const Sidebar = (isActive) => {
                     }
                   ></i>
                 </div>
-                <span className="nav-link-text ms-1">Product</span>
+                <span className="nav-link-text ms-1">Produk</span>
               </a>
             </li>
           </ul>
@@ -146,7 +168,7 @@ const Sidebar = (isActive) => {
               >
                 <div className="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                   <i
-                    className="fa-solid fa-scissors"
+                    className="fa-solid fa-file-invoice"
                     style={
                       pathname === "/admin/faktur"
                         ? { color: "black" }

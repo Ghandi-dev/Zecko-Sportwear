@@ -152,53 +152,54 @@ const Bahan = () => {
       >
         <Navbar handleButtonClick={handleButtonClick} title={"BAHAN"} />
         <div className="container-fluid">
-          <div className="bg-gradient-default rounded-top mt-3 pt-3 align-items-center">
-            <div className="row">
-              <div className="col-6">
-                <h4 className="pl-2 fw-bold">Data Bahan</h4>
-              </div>
-              <div className="col-6 d-flex justify-content-end">
-                <button
-                  className="btn bg-gradient-info btn-sm mr-2"
-                  onClick={() => {
-                    // eslint-disable-next-line
-                    return setModalType("tambah"), setShowModal(true);
-                  }}
-                >
-                  tambah
-                </button>
-              </div>
-            </div>
-          </div>
-          {/* form search */}
-          <div className="row justify-content-end">
-            <div className="col-md-12 col-lg-2">
-              <form>
-                <div className="form-group">
-                  <input
-                    type="text"
-                    // value={search}
-                    className="form-control"
-                    placeholder="Cari bahan"
-                    onChange={(e) => setSearch(e.target.value)}
-                  />
+          <div className="card card-frame mx-4 my-4">
+            <div className="card-body">
+              <div className="bg-gradient-default rounded-top align-items-center">
+                <div className="row">
+                  <div className="col-md-12 col-lg-2">
+                    <form>
+                      <div className="form-group">
+                        <input
+                          type="text"
+                          // value={search}
+                          className="form-control"
+                          placeholder="Cari bahan"
+                          onChange={(e) =>
+                            setSearch(e.target.value.toLowerCase())
+                          }
+                        />
+                      </div>
+                    </form>
+                  </div>
+                  <div className="col-lg-10 col-sm-12 d-flex justify-content-end">
+                    <button
+                      className="btn bg-gradient-info btn-sm mr-2"
+                      onClick={() => {
+                        // eslint-disable-next-line
+                        return setModalType("tambah"), setShowModal(true);
+                      }}
+                    >
+                      tambah
+                    </button>
+                  </div>
                 </div>
-              </form>
+              </div>
+              {/* form search */}
+              <DataTable
+                columns={columns}
+                data={data.filter((item) => {
+                  return search.toLowerCase() === ""
+                    ? item
+                    : item.nama.toLowerCase().includes(search);
+                })}
+                striped
+                highlightOnHover
+                fixedHeader
+                pagination
+                progressPending={data ? false : true}
+              />
             </div>
           </div>
-          <DataTable
-            columns={columns}
-            data={data.filter((item) => {
-              return search.toLowerCase() === ""
-                ? item
-                : item.nama.toLowerCase().includes(search);
-            })}
-            striped
-            highlightOnHover
-            fixedHeader
-            pagination
-            progressPending={data ? false : true}
-          />
         </div>
         {modalType !== "tambah" ? (
           <ModalDetail

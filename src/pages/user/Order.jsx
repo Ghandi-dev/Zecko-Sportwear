@@ -10,9 +10,10 @@ import ReCAPTCHA from "react-google-recaptcha";
 const telegramBotToken = process.env.REACT_APP_TOKEN_TELEGRAM;
 const chatId = process.env.REACT_APP_CHAT_ID;
 const CDN_URL = process.env.REACT_APP_CDN_URL;
-
 const Order = () => {
+  const currentDate = new Date();
   const defaultImage = null;
+
   const defaultFormData = {
     nama: "",
     noWa: "",
@@ -21,7 +22,7 @@ const Order = () => {
     patternImageName: "",
     materialImage: "",
     materialImageName: "",
-    qty: null,
+    qty: 0,
     playerList: "",
   };
   const [showModal, setShowModal] = useState(false);
@@ -111,6 +112,7 @@ const Order = () => {
           pola: formData.patternImageName,
           bahan: formData.materialImageName,
           qty: formData.qty,
+          tgl: currentDate.toISOString().split("T")[0],
         },
       ]);
       if (error) {

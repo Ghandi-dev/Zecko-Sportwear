@@ -11,7 +11,7 @@ const Navbar = ({ handleButtonClick, title }) => {
       >
         <div className="container-fluid py-1 px-3">
           <nav aria-label="breadcrumb">
-            <h6 className="font-weight-bolder mb-0">{title}</h6>
+            <h2 className="font-weight-bolder mb-0">{title}</h2>
           </nav>
           <div
             className="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4"

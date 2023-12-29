@@ -30,6 +30,7 @@ const Login = () => {
       const access_token = data.session.access_token;
       const refresh_token = data.session.refresh_token;
       if (error) throw error;
+      // eslint-disable-next-line
       const { dataSession, errorSession } = supabase.auth.setSession({
         access_token,
         refresh_token,

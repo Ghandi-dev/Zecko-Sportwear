@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Navbar, Footer, Sidebar } from "../../components/admin";
 import supabase from "../../config/clientSupabase";
 import ReactToPrint from "react-to-print";
+import Swal from "sweetalert2";
 import { FormatRupiah } from "@arismun/format-rupiah";
 const value = localStorage.getItem("sb-lwaeqdokbnvduhnprtic-auth-token");
 const dataUser = JSON.parse(value);
@@ -25,6 +26,7 @@ const pageStyle = `
 const Faktur = () => {
   const componentRef = useRef();
   const [dataFaktur, setDataFaktur] = useState({
+    id: "",
     no: "",
     nama_pelanggan: "",
     tanggal: "",
@@ -32,9 +34,10 @@ const Faktur = () => {
     qty: 0,
     harga_satuan: 0,
     telah_dibayar: 0,
+    bayar: 0,
     sisa: 0,
+    sisa_bayar: 0,
   });
-  const [selectOption, setSelectOption] = useState();
   const [pemesanan, setPemesanan] = useState([]);
   const [admin, setAdmin] = useState(false);
   const [asideIsActive, setAsideIsActive] = useState(false);
@@ -53,6 +56,7 @@ const Faktur = () => {
     const { data, error } = await supabase
       .from("pemesanan")
       .select("*")
+      .eq("isFinish", "false")
       .order("id", { ascending: false });
     if (!error) {
       setPemesanan(data);
@@ -80,15 +84,43 @@ const Faktur = () => {
   }, []);
 
   const handleFaktur = (data) => {
-    setSelectOption(data);
     const temp = pemesanan.filter((item) => item.id == data);
+    const tempSisa = temp[0].harga * temp[0].qty - temp[0].sisa_bayar;
     setDataFaktur({
       ...dataFaktur,
       nama_pelanggan: temp[0].nama,
       qty: temp[0].qty,
       no: 1,
+      id: data,
+      sisa: temp[0].harga * temp[0].qty - tempSisa,
+      telah_dibayar: tempSisa,
+      sisa_bayar: temp[0].sisa_bayar,
+      harga_satuan: temp[0].harga,
     });
   };
+
+  const handleSave = async () => {
+    const { error } = await supabase
+      .from("pemesanan")
+      .update({
+        sisa_bayar: dataFaktur.sisa - dataFaktur.bayar,
+        harga: dataFaktur.harga_satuan,
+        isFinish: dataFaktur.sisa - dataFaktur.bayar === 0 ? true : false,
+      })
+      .eq("id", dataFaktur.id);
+
+    if (error) {
+      console.error("Error edit product:", error.message);
+    } else {
+      getPemesanan();
+      Swal.fire({
+        icon: "success",
+        title: "Data berhasil diedit",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+
   return (
     <>
       <Sidebar isActive={asideIsActive} />
@@ -102,7 +134,7 @@ const Faktur = () => {
         <Navbar handleButtonClick={handleButtonClick} title={"FAKTUR"} />
         <div className="row">
           <div className="col-lg-12 mb-lg-0 mb-4">
-            <div className="card">
+            <div className="card mx-4 my-4">
               <div className="card-body p-3">
                 <div className="row">
                   <div className="col-lg-6">
@@ -257,6 +289,22 @@ const Faktur = () => {
                                       colSpan={4}
                                       style={{ textAlign: "right" }}
                                     >
+                                      Bayar
+                                    </td>
+                                    <td style={{ width: 1 }}>:</td>
+                                    <td
+                                      style={{
+                                        textAlign: "center",
+                                      }}
+                                    >
+                                      <FormatRupiah value={dataFaktur.bayar} />
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td
+                                      colSpan={4}
+                                      style={{ textAlign: "right" }}
+                                    >
                                       Sisa
                                     </td>
                                     <td style={{ width: 1 }}>:</td>
@@ -265,7 +313,11 @@ const Faktur = () => {
                                         textAlign: "center",
                                       }}
                                     >
-                                      <FormatRupiah value={dataFaktur.sisa} />
+                                      <FormatRupiah
+                                        value={
+                                          dataFaktur.sisa - dataFaktur.bayar
+                                        }
+                                      />
                                     </td>
                                   </tr>
                                 </tbody>
@@ -278,7 +330,7 @@ const Faktur = () => {
                             <h4>Admin</h4>
                             <img
                               src={
-                                dataFaktur.sisa === 0
+                                dataFaktur.sisa - dataFaktur.bayar === 0
                                   ? "../assets/img/lunas.png"
                                   : "../assets/img/tanda_tangan.png"
                               }
@@ -304,10 +356,7 @@ const Faktur = () => {
                           <div className="row">
                             <div className="col-lg-12">
                               <div className="form-group">
-                                <label
-                                  for="exampleFormControlSelect1"
-                                  className="text-white text-sm"
-                                >
+                                <label className="text-white text-sm">
                                   Example select
                                 </label>
                                 <select
@@ -394,15 +443,11 @@ const Faktur = () => {
                                 <input
                                   type="number"
                                   className="form-control"
-                                  value={dataFaktur.telah_dibayar}
+                                  value={dataFaktur.bayar}
                                   onChange={(e) => {
                                     setDataFaktur({
                                       ...dataFaktur,
-                                      telah_dibayar: e.target.value,
-                                      sisa:
-                                        dataFaktur.qty *
-                                          dataFaktur.harga_satuan -
-                                        e.target.value,
+                                      bayar: e.target.value,
                                     });
                                   }}
                                 />
@@ -412,13 +457,18 @@ const Faktur = () => {
                           <div className="row mx-1 mt-3">
                             <ReactToPrint
                               trigger={() => (
-                                <button type="button" class="btn btn-success">
+                                <button
+                                  type="button"
+                                  className="btn btn-success"
+                                >
                                   Print
                                 </button>
                               )}
                               content={() => componentRef.current}
                               copyStyles={true}
                               pageStyle={pageStyle}
+                              onBeforePrint={handleSave}
+                              onAfterPrint={() => window.location.reload()}
                             />
                           </div>
                         </form>
