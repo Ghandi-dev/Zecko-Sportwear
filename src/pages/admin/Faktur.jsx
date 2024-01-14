@@ -84,7 +84,7 @@ const Faktur = () => {
   }, []);
 
   const handleFaktur = (data) => {
-    const temp = pemesanan.filter((item) => item.id == data);
+    const temp = pemesanan.filter((item) => item.id === data);
     const tempSisa = temp[0].harga * temp[0].qty - temp[0].sisa_bayar;
     setDataFaktur({
       ...dataFaktur,
@@ -459,7 +459,7 @@ const Faktur = () => {
                               trigger={() => (
                                 <button
                                   type="button"
-                                  className="btn btn-success"
+                                  className="btn btn-warning"
                                 >
                                   Print
                                 </button>

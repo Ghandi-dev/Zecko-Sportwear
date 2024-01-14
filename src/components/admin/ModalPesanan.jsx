@@ -1,6 +1,6 @@
 // Import Swiper React components
 import React, { useState, useEffect } from "react";
-import { Modal, Button, Spinner } from "react-bootstrap";
+import { Modal, Spinner } from "react-bootstrap";
 import supabase from "../../config/clientSupabase";
 import Swal from "sweetalert2";
 

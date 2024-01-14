@@ -243,6 +243,7 @@ export const ModalTambah = ({ show, handleClose, modalType, getPola }) => {
                 className="form-control"
                 accept="image/*"
                 onChange={handleImageChange}
+                required
               />
             </div>
             <button

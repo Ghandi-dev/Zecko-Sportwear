@@ -149,8 +149,8 @@ const Order = () => {
           <div className="row text-center my-3">
             <h1> Form Order</h1>
           </div>
-          <div className="row justify-content-center">
-            <div className="col-lg-4 col-md-6 shadow p-3 mb-5 bg-white rounded ">
+          <div className="row justify-content-between mx-4">
+            <div className="col-lg-6 col-md-6 p-4 shadow  mb-5 bg-white rounded">
               <form className="lead" onSubmit={handleSubmit}>
                 <div className="form-group">
                   <label>Nama</label>
@@ -288,7 +288,7 @@ const Order = () => {
                   }}
                   transition={{ duration: 0.1 }}
                   type="submit"
-                  className="btn btn-warning float-right"
+                  className="btn btn-warning float-right mt-3"
                   disabled={
                     formData.materialImage === "" ||
                     formData.patternImage === "" ||
@@ -303,6 +303,13 @@ const Order = () => {
                 </motion.button>
               </form>
             </div>
+            <div
+              className="col-lg-6 col-md-6 shadow mb-5 bg-white rounded"
+              style={{
+                backgroundImage:
+                  'url("../assets/img/curved-images/curved6.jpg")',
+              }}
+            ></div>
           </div>
         </div>
         <ModalOrder
